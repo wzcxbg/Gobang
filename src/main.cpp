@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <windows.h>
 
 #include <iostream>
 #include <cmath>
@@ -23,7 +24,7 @@ bool gameOver = false;
 Shader* ourShader = nullptr;
 unsigned int VBO, VAO;
 
-int main()
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     // glfw: initialize and configure
     // ------------------------------
@@ -203,7 +204,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
         if (gameBoard.placeStone(row, col, currentPlayer)) {
             if (gameBoard.checkWin(row, col, currentPlayer)) {
-                std::cout << (currentPlayer == BLACK ? "Black" : "White") << " wins!" << std::endl;
+                MessageBoxW(NULL, (currentPlayer == BLACK ? L"Black wins!" : L"White wins!"), L"Game Over", MB_OK);
                 gameOver = true;
             } else {
                 currentPlayer = (currentPlayer == BLACK) ? WHITE : BLACK;

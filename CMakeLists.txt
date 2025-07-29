@@ -29,7 +29,7 @@ target_sources(glad_src INTERFACE ${glad_project_SOURCE_DIR}/src/glad.c)
 target_include_directories(glad_src INTERFACE ${glad_project_SOURCE_DIR}/include)
 
 
-add_executable(Gobang src/main.cpp src/board.cpp src/shader.cpp)
+add_executable(Gobang WIN32 src/main.cpp src/board.cpp src/shader.cpp)
 target_link_libraries(Gobang
         PRIVATE
         opengl32
