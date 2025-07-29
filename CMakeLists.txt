@@ -28,6 +28,21 @@ add_library(glad_src INTERFACE)
 target_sources(glad_src INTERFACE ${glad_project_SOURCE_DIR}/src/glad.c)
 target_include_directories(glad_src INTERFACE ${glad_project_SOURCE_DIR}/include)
 
+# Fetch FreeType
+FetchContent_Declare(
+        freetype_project
+        URL https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(freetype_project)
+
+# Fetch HarfBuzz
+FetchContent_Declare(
+        harfbuzz_project
+        URL https://github.com/harfbuzz/harfbuzz/releases/download/11.3.3/harfbuzz-11.3.3.tar.xz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(harfbuzz_project)
 
 add_executable(Gobang WIN32 src/main.cpp src/board.cpp src/shader.cpp)
 target_link_libraries(Gobang
@@ -35,4 +50,6 @@ target_link_libraries(Gobang
         opengl32
         glfw_lib
         glad_src
+        freetype
+        harfbuzz
 )
