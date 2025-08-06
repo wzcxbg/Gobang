@@ -1,5 +1,40 @@
 # 使用 /<library>/<platform>/<architecture>/<config> 的预构建库目录结构
 # 例如: 3rdparty/prebuilt/spdlog/windows/x86_64/debug
+# prebuilt/
+#├── spdlog/
+#│   ├── windows/
+#│   │   ├── x86_64/
+#│   │   │   ├── release/
+#│   │   │   │   ├── include/          # 头文件 (对于所有配置都一样，可以放在上层)
+#│   │   │   │   ├── lib/              # .lib 文件
+#│   │   │   │   └── bin/              # .dll 文件
+#│   │   │   └── debug/
+#│   │   │       ├── lib/              # spdlogd.lib (调试版)
+#│   │   │       └── bin/              # spdlogd.dll
+#│   │   └── x86/
+#│   │       └── ... (32位版本)
+#│   ├── linux/
+#│   │   └── x86_64/
+#│   │       ├── include/
+#│   │       ├── lib/
+#│   │       │   ├── libspdlog.a       # Release静态库
+#│   │       │   └── libspdlog_d.a     # Debug静态库
+#│   │       └── share/                # （可选）
+#│   │           └── cmake/spdlog/
+#│   │               └── spdlogConfig.cmake
+#│   └── macos/
+#│       ├── x86_64/
+#│       │   └── ...
+#│       └── arm64/
+#│           └── ...
+#│
+#└── zlib/
+#    ├── windows/
+#    │   └── x86_64/
+#    │       └── ...
+#    └── linux/
+#        └── x86_64/
+#            └── ...
 function(get_library_store_path LIB_NAME RETURN_VAR)
     # 1. 确定平台名称
     if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -38,6 +73,7 @@ function(get_library_store_path LIB_NAME RETURN_VAR)
     # set(variable_name value PARENT_SCOPE) 是在CMake函数中返回值给上一层的标准方法
     set(${RETURN_VAR} "${result_path}" PARENT_SCOPE)
 endfunction()
+
 
 # 用法示例：
 # find_or_fetch_package(
@@ -102,6 +138,7 @@ function(find_or_fetch_package)
             "${LIB_CONFIGURE_ARGS}"
     )
 endfunction()
+
 
 function(_find_or_fetch_package_impl _NAME _FETCH_CONTENT_ARGS _CONFIGURE_ARGS)
     set(LIB_NAME ${_NAME})
