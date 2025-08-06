@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
+include(cmake/FindOrFetchPackage.cmake)
 
 # Fetch GLFW
 FetchContent_Populate(
@@ -21,28 +22,30 @@ target_link_libraries(glfw_lib INTERFACE "${glfw_project_SOURCE_DIR}/lib-vc2022/
 # Fetch GLAD
 FetchContent_Populate(
         glad_project
-        URL https://glad.dav1d.de/generated/tmphh169cusglad/glad.zip
+        URL https://glad.dav1d.de/generated/tmpzdklx5xlglad/glad.zip
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 add_library(glad_src INTERFACE)
 target_sources(glad_src INTERFACE ${glad_project_SOURCE_DIR}/src/glad.c)
 target_include_directories(glad_src INTERFACE ${glad_project_SOURCE_DIR}/include)
 
-# Fetch FreeType
-FetchContent_Declare(
-        freetype_project
-        URL https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
-FetchContent_MakeAvailable(freetype_project)
 
-# Fetch HarfBuzz
-FetchContent_Declare(
-        harfbuzz_project
-        URL https://github.com/harfbuzz/harfbuzz/releases/download/11.3.3/harfbuzz-11.3.3.tar.xz
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+find_or_fetch_package(
+        NAME freetype
+        URL https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz
 )
-FetchContent_MakeAvailable(harfbuzz_project)
+
+find_or_fetch_package(
+        NAME harfbuzz
+        URL https://github.com/harfbuzz/harfbuzz/releases/download/11.3.3/harfbuzz-11.3.3.tar.xz
+)
+
+find_or_fetch_package(
+        NAME spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.15.3
+        CONFIGURE_ARGS -DSPDLOG_BUILD_SHARED=OFF -DSPDLOG_INSTALL=ON
+)
 
 add_executable(Gobang WIN32 src/main.cpp src/board.cpp src/shader.cpp)
 target_link_libraries(Gobang
@@ -52,4 +55,5 @@ target_link_libraries(Gobang
         glad_src
         freetype
         harfbuzz
+        spdlog::spdlog
 )
